@@ -32,7 +32,7 @@ fn main() -> Result<(), MpuErr> {
 
     let mut last = Utc::now();
     let mut counter = 0;
-    const PC: u32 = 100;
+    const PC: u32 = 40;
 
     loop {
         let acc = mpu.get_acc()?;

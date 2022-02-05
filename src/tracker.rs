@@ -16,14 +16,17 @@ impl Tracker {
 		}
 	}
 
-	pub fn update(&mut self, pos_acc: Vector3<f32>, mut rot_vel: Vector3<f32>, delta_time: f32) {
+	pub fn update(&mut self, mut pos_acc: Vector3<f32>, mut rot_vel: Vector3<f32>, delta_time: f32) {
 		//Rotate self.rot by rot_vel
 		rot_vel *= delta_time;
 		let q = UnitQuaternion::from_euler_angles(rot_vel.x, rot_vel.y, rot_vel.z);
 		self.rot *= q;
 
 		//Add the acceleration to the velocity, after rotating it by the local orientation.
-		self.vel += self.rot.inverse_transform_vector(&(pos_acc * delta_time));
+		pos_acc = self.rot.transform_vector(&pos_acc);
+		pos_acc.z += 1.0;
+		pos_acc *= delta_time;
+		self.vel += pos_acc;
 		//The position is automatically corrected for local orientation of the mpu, because the velocity already is.
 		self.pos += self.vel * delta_time;
 	}
